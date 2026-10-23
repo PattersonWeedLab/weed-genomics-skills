@@ -1,0 +1,2 @@
+# Empty final fields are meaningful in tab-separated registries and templates.
+*.tsv whitespace=-blank-at-eol

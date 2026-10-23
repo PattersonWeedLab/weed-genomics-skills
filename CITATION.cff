@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Please cite this repository and the exact commit or release used."
+title: "Weed Genomics Skills"
+type: software
+authors:
+  - name: "PattersonWeedLab"
+repository-code: "https://github.com/PattersonWeedLab/weed-genomics-skills"
+url: "https://github.com/PattersonWeedLab/weed-genomics-skills"
+license: Apache-2.0
+abstract: "A source-linked, extensible knowledge framework for weed genomics research by scientists and AI agents."

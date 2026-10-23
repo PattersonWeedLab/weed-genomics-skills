@@ -1,0 +1,58 @@
+---
+id: wg.replace-me
+title: REPLACE with a focused title
+category: workflow
+scope:
+  level: general
+  taxa: []
+  assemblies: []
+  biological_material: not_applicable
+evidence_types: [expert_interpretation]
+review_status: draft
+reviewed_by: []
+reviewed_on: null
+review_evidence: []
+review_note: ""
+sources: [src.replace-me]
+last_verified: "YYYY-MM-DD"
+deprecated: false
+superseded_by: []
+deprecation_reason: ""
+related_records: []
+uncertainty: [unknown]
+---
+
+# REPLACE with a focused title
+
+## When it matters
+
+State the research question or trigger. Keep applicability narrow.
+
+## Required context
+
+Identify material, references, methods and versions needed to apply this rule.
+
+## Evidence and likely mistake
+
+State a supported finding with [src.replace-me: exact section].
+Describe the plausible agent mistake and why the evidence does not justify it.
+
+## Consequence and recommended action
+
+Explain the biological/analytical harm and what the agent should do instead.
+Label a recommendation derived from evidence as interpretation.
+
+## Uncertainty and example
+
+Give a short example with expected behavior; label hypothetical material.
+Distinguish unknown, not_applicable, conflicting and unverified information.
+
+## Sources
+
+- [src.replace-me] REPLACE with source description; register its locator.
+
+## Method selection
+
+Describe prerequisites, appropriate/inappropriate use, decision points and
+stop conditions. Distinguish suggested checks from executed analyses. Link
+upstream methods rather than reimplementing pipelines.

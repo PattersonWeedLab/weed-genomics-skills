@@ -1,0 +1,17 @@
+# Optional benchmark output scaffold. Do not populate outcomes without a run.
+knowledge_commit: "REPLACE"
+cases_sha256: "REPLACE"
+model_and_version: "REPLACE"
+client_and_version: "REPLACE"
+condition: "baseline-or-skill"
+sampling_settings: {}
+tool_and_network_access: "REPLACE"
+repeat: 1
+case_id: "eval.replace-me"
+prompt_artifact: "REPLACE"
+response_artifact: "REPLACE"
+tool_trace_artifact: "REPLACE"
+human_scorer: "REPLACE only after scoring"
+expected_behavior_scores: []
+prohibited_assumptions_present: []
+notes: "REPLACE with uncertainty and disagreements"

@@ -1,0 +1,29 @@
+schema_version: 1
+taxa:
+  - id: ncbi:3559
+    scientific_name: Chenopodium album
+    rank: species
+    aliases: [fat-hen, common lambsquarters, white goosefoot]
+    sources: [src.chenopodium-genome, src.iwgc-2024]
+records:
+  - id: wg.reference-identity
+    category: workflow
+    topics: [reference selection, assembly identity, annotation identity]
+    taxa: []
+    aliases: [gene ID mapping, haplotype annotation]
+    path: references/workflows/reference-identity.md
+    keywords: [accession, version, primary, alternate, GFF3, gene numbering, Cyperus]
+  - id: wg.polyploid-copy-relationships
+    category: shared
+    topics: [polyploidy, comparative genomics, gene duplication]
+    taxa: []
+    aliases: [homeologs, homoeologs, orthology, paralogy]
+    path: references/shared/polyploid-copy-relationships.md
+    keywords: [subgenome, haplotype, allele, synteny, ploidy, BUSCO, gene family]
+  - id: wg.chenopodium-album-dcchealbu1
+    category: species
+    topics: [assembly interpretation, chromosome labels, specimen scope]
+    taxa: [ncbi:3559]
+    aliases: [Chenopodium album, fat-hen, common lambsquarters, dcCheAlbu1]
+    path: references/species/chenopodium-album.md
+    keywords: [GCA_948465745.1, GCA_948466375.1, hexaploid, alternate, subgenome]

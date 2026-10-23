@@ -1,0 +1,215 @@
+# JSON Schema Draft 2020-12, serialized as YAML. See README.md for semantics.
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://github.com/PattersonWeedLab/weed-genomics-skills/schema/v1
+$defs:
+  id:
+    type: string
+    pattern: '^[a-z][a-z0-9]*([.-][a-z0-9]+)*$'
+  text:
+    type: string
+    minLength: 1
+  texts:
+    type: array
+    items: {$ref: '#/$defs/text'}
+    uniqueItems: true
+  ids:
+    type: array
+    items: {$ref: '#/$defs/id'}
+    uniqueItems: true
+  date:
+    type: string
+    format: date
+  date_or_unknown:
+    anyOf:
+      - {$ref: '#/$defs/date'}
+      - {enum: [unknown, unverified]}
+  evidence:
+    enum: [authoritative_database, formal_specification, peer_reviewed_primary,
+      peer_reviewed_review, public_preprint, reproducible_analysis,
+      project_observation, expert_interpretation, unverified_assertion,
+      project_documentation]
+  status:
+    enum: [draft, reviewed, verified, consensus]
+  category:
+    enum: [shared, family, species, workflow, tool, exception, annotation]
+  scope:
+    type: object
+    additionalProperties: false
+    required: [level, taxa, assemblies, biological_material]
+    properties:
+      level: {enum: [general, taxon, assembly]}
+      taxa: {$ref: '#/$defs/texts'}
+      assemblies: {$ref: '#/$defs/ids'}
+      biological_material: {$ref: '#/$defs/text'}
+  annotation:
+    type: object
+    additionalProperties: false
+    required: [assembly_id, provider, release]
+    properties:
+      assembly_id: {$ref: '#/$defs/id'}
+      provider: {$ref: '#/$defs/text'}
+      release: {$ref: '#/$defs/text'}
+      locator: {type: string, format: uri}
+  tool:
+    type: object
+    additionalProperties: false
+    required: [name, upstream_repository, version_scope, inputs, outputs, citation]
+    properties:
+      name: {$ref: '#/$defs/text'}
+      upstream_repository: {type: string, format: uri}
+      version_scope: {$ref: '#/$defs/text'}
+      inputs: {$ref: '#/$defs/texts', minItems: 1}
+      outputs: {$ref: '#/$defs/texts', minItems: 1}
+      citation: {$ref: '#/$defs/id'}
+  record:
+    type: object
+    additionalProperties: false
+    required: [id, title, category, scope, evidence_types, review_status, reviewed_by,
+      reviewed_on, review_evidence, review_note, sources, last_verified,
+      deprecated, superseded_by, deprecation_reason, related_records, uncertainty]
+    properties:
+      id: {$ref: '#/$defs/id'}
+      title: {$ref: '#/$defs/text'}
+      category: {$ref: '#/$defs/category'}
+      scope: {$ref: '#/$defs/scope'}
+      evidence_types:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items: {$ref: '#/$defs/evidence'}
+      review_status: {$ref: '#/$defs/status'}
+      reviewed_by: {$ref: '#/$defs/texts'}
+      reviewed_on:
+        anyOf:
+          - {$ref: '#/$defs/date'}
+          - {type: 'null'}
+      review_evidence:
+        type: array
+        uniqueItems: true
+        items: {type: string, format: uri}
+      review_note: {type: string}
+      sources: {$ref: '#/$defs/ids', minItems: 1}
+      last_verified: {$ref: '#/$defs/date'}
+      deprecated: {type: boolean}
+      superseded_by: {$ref: '#/$defs/ids'}
+      deprecation_reason: {type: string}
+      related_records: {$ref: '#/$defs/ids'}
+      uncertainty:
+        type: array
+        items: {enum: [unknown, not_applicable, conflicting, unverified]}
+        uniqueItems: true
+      annotation: {$ref: '#/$defs/annotation'}
+      tool: {$ref: '#/$defs/tool'}
+    allOf:
+      - if:
+          properties: {category: {const: annotation}}
+        then:
+          required: [annotation]
+      - if:
+          properties: {category: {const: tool}}
+        then:
+          required: [tool]
+  taxon:
+    type: object
+    additionalProperties: false
+    required: [id, scientific_name, rank, aliases, sources]
+    properties:
+      id: {type: string, pattern: '^(ncbi:[0-9]+|local:[a-z0-9-]+)$'}
+      scientific_name: {$ref: '#/$defs/text'}
+      rank: {enum: [species, genus, family, clade]}
+      aliases: {$ref: '#/$defs/texts'}
+      sources: {$ref: '#/$defs/ids', minItems: 1}
+  index_entry:
+    type: object
+    additionalProperties: false
+    required: [id, category, topics, taxa, aliases, path, keywords]
+    properties:
+      id: {$ref: '#/$defs/id'}
+      category: {$ref: '#/$defs/category'}
+      topics: {$ref: '#/$defs/texts', minItems: 1}
+      taxa: {$ref: '#/$defs/texts'}
+      aliases: {$ref: '#/$defs/texts'}
+      path: {type: string, pattern: '^references/[a-z0-9/-]+[.]md$'}
+      keywords: {$ref: '#/$defs/texts', minItems: 1}
+  index:
+    type: object
+    additionalProperties: false
+    required: [schema_version, taxa, records]
+    properties:
+      schema_version: {const: 1}
+      taxa: {type: array, items: {$ref: '#/$defs/taxon'}}
+      records: {type: array, items: {$ref: '#/$defs/index_entry'}, minItems: 1}
+  source:
+    type: object
+    additionalProperties: false
+    required: [source_id, source_type, title, doi, accession, url, last_verified,
+      verification_status, license, reuse_notes, verification_notes]
+    properties:
+      source_id: {$ref: '#/$defs/id'}
+      source_type: {$ref: '#/$defs/evidence'}
+      title: {$ref: '#/$defs/text'}
+      doi: {type: string}
+      accession: {type: string}
+      url: {type: string, format: uri}
+      last_verified: {$ref: '#/$defs/date_or_unknown'}
+      verification_status: {enum: [verified, unverified, inaccessible]}
+      license: {$ref: '#/$defs/text'}
+      reuse_notes: {$ref: '#/$defs/text'}
+      verification_notes: {$ref: '#/$defs/text'}
+  assembly:
+    type: object
+    additionalProperties: false
+    required: [assembly_id, taxon_id, accession, version, assembly_name,
+      biological_material, representation, phasing, publication_status,
+      source_ids, related_assemblies, last_verified, review_status, reviewed_by,
+      reviewed_on, review_evidence, review_note, deprecated, superseded_by,
+      deprecation_reason]
+    properties:
+      assembly_id: {$ref: '#/$defs/id'}
+      taxon_id: {$ref: '#/$defs/text'}
+      accession: {$ref: '#/$defs/text'}
+      version: {$ref: '#/$defs/text'}
+      assembly_name: {$ref: '#/$defs/text'}
+      biological_material: {$ref: '#/$defs/text'}
+      representation: {enum: [primary, alternate, phased, unknown, unverified, conflicting]}
+      phasing: {$ref: '#/$defs/text'}
+      publication_status: {enum: [published, public_preliminary, unverified]}
+      source_ids: {$ref: '#/$defs/ids', minItems: 1}
+      related_assemblies: {$ref: '#/$defs/ids'}
+      last_verified: {$ref: '#/$defs/date'}
+      review_status: {$ref: '#/$defs/status'}
+      reviewed_by: {$ref: '#/$defs/texts'}
+      reviewed_on:
+        anyOf:
+          - {$ref: '#/$defs/date'}
+          - {type: 'null'}
+      review_evidence:
+        type: array
+        uniqueItems: true
+        items: {type: string, format: uri}
+      review_note: {type: string}
+      deprecated: {type: boolean}
+      superseded_by: {$ref: '#/$defs/ids'}
+      deprecation_reason: {type: string}
+  case:
+    type: object
+    additionalProperties: false
+    required: [id, kind, question, context, record_ids, source_ids, expected,
+      prohibited, review_status]
+    properties:
+      id: {$ref: '#/$defs/id'}
+      kind: {enum: [failure_mode, positive_control, negative_control]}
+      question: {$ref: '#/$defs/text'}
+      context: {$ref: '#/$defs/text'}
+      record_ids: {$ref: '#/$defs/ids', minItems: 1}
+      source_ids: {$ref: '#/$defs/ids', minItems: 1}
+      expected: {$ref: '#/$defs/texts', minItems: 1}
+      prohibited: {$ref: '#/$defs/texts', minItems: 1}
+      review_status: {const: draft}
+  cases:
+    type: object
+    additionalProperties: false
+    required: [schema_version, cases]
+    properties:
+      schema_version: {const: 1}
+      cases: {type: array, items: {$ref: '#/$defs/case'}, minItems: 1}

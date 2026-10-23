@@ -1,0 +1,10 @@
+# All fields mandatory. Append the case under cases, without this outer list.
+- id: eval.replace-me
+  kind: failure_mode # or positive_control / negative_control
+  question: "REPLACE with a realistic research question"
+  context: "REPLACE with source-supported context; label synthetic fixtures"
+  record_ids: [wg.replace-me]
+  source_ids: [src.replace-me]
+  expected: ["REPLACE with observable correct behavior"]
+  prohibited: ["REPLACE with a concrete unjustified assumption"]
+  review_status: draft

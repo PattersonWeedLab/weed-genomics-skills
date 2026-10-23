@@ -1,0 +1,3 @@
+assembly_id	taxon_id	accession	version	assembly_name	biological_material	representation	phasing	publication_status	source_ids	related_assemblies	last_verified	review_status	reviewed_by	reviewed_on	review_evidence	review_note	deprecated	superseded_by	deprecation_reason
+asm.gca-948465745-1	ncbi:3559	GCA_948465745	1	dcCheAlbu1.1	dcCheAlbu1; specimen KDTOL10275	primary	unverified	published	src.chenopodium-genome	asm.gca-948466375-1	2026-10-23	draft					false		
+asm.gca-948466375-1	ncbi:3559	GCA_948466375	1	unknown	dcCheAlbu1; specimen KDTOL10275	alternate	unverified	published	src.chenopodium-genome	asm.gca-948465745-1	2026-10-23	draft					false		

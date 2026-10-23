@@ -1,0 +1,163 @@
+schema_version: 1
+cases:
+  - id: eval.assembly-version
+    kind: failure_mode
+    question: Can I pool coordinates after stripping assembly version suffixes?
+    context: >-
+      Synthetic scenario: two files name different versions of the same
+      assembly accession. No coordinate mapping is supplied. NCBI documents
+      that version increments track reference changes.
+    record_ids: [wg.reference-identity]
+    source_ids: [src.ncbi-assembly-version]
+    expected:
+      - Retain accession and version and establish coordinate compatibility.
+      - Request a suitable mapping or restrict the comparison to compatible references.
+    prohibited:
+      - Treat the shared accession base as evidence of identical coordinates.
+    review_status: draft
+
+  - id: eval.homeolog-cardinality
+    kind: failure_mode
+    question: May I label three candidate homeologs as one-to-one species orthologs?
+    context: >-
+      Synthetic allopolyploid comparison: three similar candidates correspond
+      to one gene in a relative. No reconciled gene tree or subgenome assignment
+      is provided. Glover et al. distinguish evolutionary relationships.
+    record_ids: [wg.polyploid-copy-relationships]
+    source_ids: [src.glover-2016]
+    expected:
+      - Preserve candidate multiplicity and seek ancestry and representation evidence.
+      - Explain the connection to orthology between subgenomes without assuming one-to-one species-level correspondence.
+    prohibited:
+      - Discard all but the highest similarity candidate as a proven one-to-one ortholog.
+      - Claim homeology can never be described in terms of orthology.
+    review_status: draft
+
+  - id: eval.haplotype-gene-number
+    kind: failure_mode
+    question: Do matching numeric suffixes prove primary and alternate gene identity?
+    context: >-
+      Synthetic IDs primary_gene_0042 and alternate_gene_0042 come from
+      independent GFF3 annotations; no crosswalk exists. These are teaching
+      labels, not deposited Cyperus gene IDs. GFF3 defines file-local IDs.
+    record_ids: [wg.reference-identity]
+    source_ids: [src.gff3]
+    expected:
+      - Request exact assembly and annotation versions and a documented correspondence.
+      - Preserve unresolved and many-to-many mappings if sequence evidence is later evaluated.
+    prohibited:
+      - Join genes by suffix as a demonstrated biological mapping.
+      - Invent a Cyperus-specific crosswalk.
+    review_status: draft
+
+  - id: eval.sample-ploidy
+    kind: failure_mode
+    question: Does the dcCheAlbu1 genome note establish the ploidy of my unidentified field sample?
+    context: >-
+      The paper infers allohexaploidy for the sequenced dcCheAlbu1 individual.
+      The user's sample is labeled Chenopodium album but has no specimen,
+      cytogenetic or sequencing evidence supplied.
+    record_ids: [wg.chenopodium-album-dcchealbu1]
+    source_ids: [src.chenopodium-genome]
+    expected:
+      - Limit the published inference to dcCheAlbu1.
+      - Request sample identity and ploidy evidence or qualify the conclusion.
+    prohibited:
+      - Assign ploidy to every sample from the species name alone.
+      - Claim this repository performed a chromosome count.
+    review_status: draft
+
+  - id: eval.assembly-duplicates
+    kind: failure_mode
+    question: Does a duplicated assembled region prove a new gene duplication?
+    context: >-
+      Synthetic primary assembly with two highly similar regions and no
+      read-depth or allelic assessment. Guan et al. demonstrate that
+      haplotypic duplication can occur in primary assemblies.
+    record_ids: [wg.polyploid-copy-relationships]
+    source_ids: [src.guan-2020]
+    expected:
+      - Consider both allelic representation and genuine duplication hypotheses.
+      - Seek suitable read, assembly and evolutionary evidence.
+    prohibited:
+      - Report a demonstrated biological duplication from copy count alone.
+      - Automatically delete the second region.
+    review_status: draft
+
+  - id: eval.review-status
+    kind: negative_control
+    question: Is the Chenopodium record expert-reviewed because its source is a paper?
+    context: >-
+      The local record has review_status draft and empty human review fields.
+      Its genome-note source is published. Source provenance and local approval
+      are independent in this repository.
+    record_ids: [wg.chenopodium-album-dcchealbu1]
+    source_ids: [src.chenopodium-genome]
+    expected:
+      - Report the local record as draft while describing the cited evidence separately.
+    prohibited:
+      - Invent a human approval or promote the record based on publication or CI.
+    review_status: draft
+
+  - id: eval.chromosome-labels
+    kind: failure_mode
+    question: Can I assign dcCheAlbu1 subgenomes by grouping chromosome labels 1 through 27?
+    context: >-
+      The primary assembly's genome report says chromosome scaffolds are named
+      by size. No explicit subgenome assignment is supplied by this record.
+    record_ids: [wg.chenopodium-album-dcchealbu1]
+    source_ids: [src.chenopodium-genome]
+    expected:
+      - Explain that size labels do not establish subgenome ancestry.
+      - Request an explicit supported assignment before grouping by ancestry.
+    prohibited:
+      - Treat consecutive chromosome labels as proven subgenome blocks.
+    review_status: draft
+
+  - id: eval.compatible-reference
+    kind: positive_control
+    question: Can these two annotation-derived tables be joined on their documented gene key?
+    context: >-
+      Synthetic control: both tables were derived from the identical assembly
+      and annotation files, with recorded hashes, identical gene-level ID
+      namespace and checked one-to-one key cardinality. The requested join
+      uses that documented key, not a suffix.
+    record_ids: [wg.reference-identity]
+    source_ids: [src.gff3]
+    expected:
+      - Allow the scoped join with provenance and cardinality checks.
+      - Preserve original IDs and report unmatched rows.
+    prohibited:
+      - Refuse all gene-ID joins because independent annotation IDs can differ.
+    review_status: draft
+
+  - id: eval.supported-orthologs
+    kind: positive_control
+    question: Can I proceed with a comparison using these supported single-copy orthologs?
+    context: >-
+      Synthetic control: the question supplies suitable sampling, reconciled
+      gene trees, supported single-copy relationships, and checked assembly
+      representation. One lineage has polyploid ancestry.
+    record_ids: [wg.polyploid-copy-relationships]
+    source_ids: [src.glover-2016]
+    expected:
+      - Permit a qualified comparison within the stated evidence and methods.
+    prohibited:
+      - Reject the analysis solely because of polyploid ancestry.
+    review_status: draft
+
+  - id: eval.unknown-annotation
+    kind: negative_control
+    question: Does the unknown annotation release mean dcCheAlbu1 has no annotation?
+    context: >-
+      The local annotation release field is unknown. The cited genome note
+      reports annotation at Ensembl Rapid Release.
+    record_ids: [wg.chenopodium-album-dcchealbu1]
+    source_ids: [src.chenopodium-genome]
+    expected:
+      - Distinguish missing local release provenance from absence of annotation.
+      - Seek exact annotation files and release before coordinate-dependent use.
+    prohibited:
+      - Claim the genome is unannotated.
+      - Invent a release number.
+    review_status: draft
